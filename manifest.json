@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Copy Link As",
+    "version": "1.0",
+    "options_ui": {
+      "page": "./options.html",
+      "open_in_tab": true
+    },
+    "action": {
+      "default_popup": "./popup.html"
+    },
+    "permissions": [
+      "storage",
+      "clipboardWrite",
+      "activeTab",
+      "scripting"
+    ]
+  }
