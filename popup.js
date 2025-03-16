@@ -16,37 +16,65 @@ document.addEventListener('DOMContentLoaded', async function() {
             const element = document.getElementById(format);
             if (element) {
                 element.addEventListener('click', function() { 
-                    listener(title, url);
+                    listener(title, url, this);
                 });
             }
         }
     } catch (error) {
         console.error("Error initializing popup:", error);
     }
-    document.querySelector("button").focus();
 });
 
-function makeLink_html(title, url) {
-    const expression = `<a href="${url}">${title}</a>`;
-    copyToClipboard(expression);
+function makeLink_html(title, url, buttonElement) {
+    const expression = `<a href="${encodeURIComponent(url)}">${title}</a>`;
+    copyToClipboard(expression, buttonElement);
 }
 
-function makeLink_md(title, url) {
-    const expression = `[${title}](${url})`;
-    copyToClipboard(expression);
+function makeLink_md(title, url, buttonElement) {
+    const expression = `[${title}](${encodeURIComponent(url)})`;
+    copyToClipboard(expression, buttonElement);
 }
 
-function makeLink_json(title, url) {            
+function makeLink_json(title, url, buttonElement) {            
     const expression = JSON.stringify({ title, url });
-    copyToClipboard(expression);
+    copyToClipboard(expression, buttonElement);
 }
 
-function copyToClipboard(text) {
+function copyToClipboard(text, buttonElement) {
+    // ボタンの元のテキストを保存
+    const originalText = buttonElement.innerHTML;
+    
     try {
-        navigator.clipboard.writeText(text);
-        alert("コピーしました！");
+        navigator.clipboard.writeText(text).then(() => {
+            // コピー成功時のフィードバック
+            buttonElement.innerHTML = "Copied!";
+            buttonElement.classList.add("button-success");
+            
+            // 2秒後に元に戻す
+            setTimeout(() => {
+                buttonElement.innerHTML = originalText;
+                buttonElement.classList.remove("button-success");
+            }, 2000);
+        }).catch(err => {
+            // エラー時のフィードバック
+            buttonElement.innerHTML = "Failed!";
+            buttonElement.classList.add("button-error");
+            console.error("クリップボードへのコピーに失敗しました:", err);
+            
+            setTimeout(() => {
+                buttonElement.innerHTML = originalText;
+                buttonElement.classList.remove("button-error");
+            }, 2000);
+        });
     } catch (err) {
+        // 非同期処理以外のエラー時
+        buttonElement.innerHTML = "Failed!";
+        buttonElement.classList.add("button-error");
         console.error("クリップボードへのコピーに失敗しました:", err);
-        alert("コピーに失敗しました。テキスト: " + text);
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalText;
+            buttonElement.classList.remove("button-error");
+        }, 2000);
     }
 }
