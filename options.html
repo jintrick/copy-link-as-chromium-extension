@@ -1,14 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Extension Options</title>
+  <meta charset="UTF-8">
+  <title>Copy Link As - Options</title>
+  <style>
+    /* 現在のスタイルを継承 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .template-container {
+      margin-bottom: 20px;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 80px;
+      font-family: monospace;
+      padding: 8px;
+      margin-top: 8px;
+    }
+    
+    .reset-button {
+      margin-top: 5px;
+    }
+    
+    h1 {
+      margin-bottom: 20px;
+    }
+    
+    .description {
+      color: #666;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Extension Options</h1>
-  <label>
-    <input type="checkbox" id="myCheckbox">
-    Enable feature
-  </label>
-  <script src="./options.js"></script>
+  <h1>Template Settings</h1>
+  <p>カスタムテンプレートを設定できます。以下の変数が使用可能です：</p>
+  <ul>
+    <li><code>${title}</code> - ページのタイトル</li>
+    <li><code>${url}</code> - ページのURL</li>
+  </ul>
+  
+  <div class="template-container">
+    <h3>HTML Template</h3>
+    <p class="description">HTMLリンク要素のテンプレート</p>
+    <textarea id="htmlTemplate"></textarea>
+    <button class="reset-button" id="resetHtml">デフォルトに戻す</button>
+  </div>
+
+  <div class="template-container">
+    <h3>Markdown Template</h3>
+    <p class="description">Markdownリンクのテンプレート</p>
+    <textarea id="mdTemplate"></textarea>
+    <button class="reset-button" id="resetMd">デフォルトに戻す</button>
+  </div>
+
+  <div class="template-container">
+    <h3>JSON Template</h3>
+    <p class="description">JSONリンクのテンプレート</p>
+    <textarea id="jsonTemplate"></textarea>
+    <button class="reset-button" id="resetJson">デフォルトに戻す</button>
+  </div>
+
+  <div id="status"></div>
+  <button id="save">保存</button>
+
+  <script src="options.js"></script>
 </body>
 </html>

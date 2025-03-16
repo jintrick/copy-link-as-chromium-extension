@@ -3,39 +3,57 @@ import { crm } from "./chrome.js";
 const EVENT_HANDLERS = {
     "html": makeLink_html,
     "md": makeLink_md,
-    "json": makeLink_json
+    "json": makeLink_json,
+    "prefs": null
+};
+
+var title;
+var url;
+
+URL.prototype.serializeAsHTML = function(){
+  const ser = new XMLSerializer();
+  const txt = document.createTextNode(this.href);
+  return ser.serializeToString(txt);
 };
 
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         const tab = await crm.getActiveTab();
-        const title = tab.title;
-        const url = tab.url;
+        title = tab.title;
+        url = new URL(tab.url);
         
         for (const [format, listener] of Object.entries(EVENT_HANDLERS)) {
             const element = document.getElementById(format);
-            if (element) {
+            if (format === "prefs") {
+                element.addEventListener('click', () => {
+                    chrome.runtime.openOptionsPage();
+                });
+            } else {
                 element.addEventListener('click', function() { 
                     listener(title, url, this);
                 });
             }
         }
+        document.querySelector("button").focus();
     } catch (error) {
         console.error("Error initializing popup:", error);
     }
 });
 
 function makeLink_html(title, url, buttonElement) {
-    const expression = `<a href="${encodeURIComponent(url)}">${title}</a>`;
+    url = url.serializeAsHTML();
+    const expression = `<a href="${url}">${title}</a>`;
     copyToClipboard(expression, buttonElement);
 }
 
 function makeLink_md(title, url, buttonElement) {
-    const expression = `[${title}](${encodeURIComponent(url)})`;
+    url = url.serializeAsHTML();
+    const expression = `[${title}](${url})`;
     copyToClipboard(expression, buttonElement);
 }
 
-function makeLink_json(title, url, buttonElement) {            
+function makeLink_json(title, url, buttonElement) {
+    url = url.href
     const expression = JSON.stringify({ title, url });
     copyToClipboard(expression, buttonElement);
 }
@@ -78,3 +96,4 @@ function copyToClipboard(text, buttonElement) {
         }, 2000);
     }
 }
+

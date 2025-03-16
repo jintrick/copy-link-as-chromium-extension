@@ -134,6 +134,24 @@
       background-color: rgba(13, 148, 136, 0.85);
     }
 
+    #prefs {
+      background-color: var(--background) /* 控えめな背景色 */
+      color: rgba(255, 255, 255, 0.7); /* 控えめなテキスト色 */
+      box-shadow: none; /* シャドウを削除 */
+    }
+
+    #prefs:hover {
+      background-color: var(--background); /* ホバー時の背景色を変更しない */
+      box-shadow: none; /* ホバー時のシャドウを削除 */
+      transform: none; /* ホバー時の変形を削除 */
+    }
+
+    #prefs:active {
+      background-color: var(--background) /* アクティブ時の背景色を変更しない */
+      box-shadow: none; /* アクティブ時のシャドウを削除 */
+      transform: none; /* アクティブ時の変形を削除 */
+    }
+
     #html:hover {
       background-color: rgba(67, 56, 202, 0.9);
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
@@ -156,7 +174,7 @@
     <li><button id="html" title="Copy link as HTML a element">&lt;a /&gt;</button></li>
     <li><button id="md" title="Copy link as markdown">[..](..)</button></li>
     <li><button id="json" title="Copy link as JSON">{"..":".."}</button></li>
-    <!-- <li><a href="options.html" title="Configuration">⚙️</a></li>  -->
+    <li><button id="prefs" title="Configuration">⚙️</button></li> 
   </ul>
 </body>
 </html>
