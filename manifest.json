@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Copy Link As",
     "description": "Copy the current page's URL in various formats",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "options_ui": {
       "page": "./options.html",
       "open_in_tab": true
@@ -10,10 +10,12 @@
     "action": {
       "default_popup": "./popup.html"
     },
+
     "permissions": [
       "storage",
       "clipboardWrite",
       "activeTab",
-      "scripting"
+      "scripting",
+      "commands"
     ]
   }

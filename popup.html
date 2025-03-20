@@ -6,40 +6,35 @@
   <script type="module" src="./popup.js"></script>
   <style>
     :root {
-      --primary-color: rgba(79, 70, 229, 0.9);
+      --primary-color: rgba(58, 93, 199, 0.9);
       --primary-hover: rgba(67, 56, 202, 0.95);
       --primary-active: rgba(55, 48, 163, 1);
       --background: rgba(249, 250, 251, 0.85);
-      --text-color: rgba(31, 41, 55, 0.9);
-      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      --border-radius: 8px;
-      --transition: all 0.2s ease;
-    }
-
-    html, body {
-      background-color: transparent;
+      --border-radius: 7px;
+      --text-color: rgba(107, 107, 107, 0.9);
+      --disabled-color: rgba(156, 163, 175, 0.7);
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      --error-color: #ef4444;
+      --success-color: #22c55e;
+      --transition: all 0.3s ease;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      width: 180px;
+      width: 300px;
       padding: 16px;
       margin: 0;
       background-color: var(--background);
       color: var(--text-color);
       box-sizing: border-box;
-      backdrop-filter: blur(5px);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
+  }
     h1 {
-      text-align: center;
       margin: 0 0 16px 0;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
+      font-style: italic;
       color: var(--text-color);
-      letter-spacing: -0.01em;
+      text-align: center
     }
 
     ul {
@@ -49,6 +44,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      align-items: center;
+      margin: 16px 0 0 0;
     }
 
     li {
@@ -56,45 +53,48 @@
     }
 
     button {
-      width: 100%;
+      width: 100px;
       padding: 10px 16px;
       border: none;
       border-radius: var(--border-radius);
       background-color: var(--primary-color);
-      color: white;
+      color: var(--background);
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       text-align: center;
-      box-shadow: var(--shadow);
       transition: var(--transition);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(3px);
       transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    button:hover {
+    button:hover, button:focus {
       background-color: var(--primary-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+      box-shadow: var(--shadow);
+      filter: brightness(1.2);
+    }
+
+    button:focus {
+      outline: 1px solid white;
     }
 
     button:active {
-      background-color: var(--primary-active);
       transform: translateY(0);
       box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
     }
-    
-      /* 状態を表すクラス */
-  .button-success {
-    background-color: #22c55e !important;
-  }
 
-  .button-error {
-    background-color: #ef4444 !important;
-  }
+  
+
+      /* 状態を表すクラス */
+    .button-success {
+      background-color: var(--success-color) !important;
+    }
+    .button-error {
+      background-color: var(--error-color) !important;
+    }
 
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -105,25 +105,10 @@
         animation: fadeIn 0.3s ease;
     }
 
-    a {
-      display: block;
-      text-align: center;
-      font-size: 22px;
-      color: var(--text-color);
-      text-decoration: none;
-      padding: 8px;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-    }
-
-    a:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-      color: var(--primary-color);
-    }
 
     /* ボタンごとの個別スタイル */
     #html {
-      background-color: rgba(79, 70, 229, 0.85);
+      background-color: rgba(0, 115, 255, 0.856);
     }
 
     #md {
@@ -133,48 +118,135 @@
     #json {
       background-color: rgba(13, 148, 136, 0.85);
     }
+ 
 
-    #prefs {
-      background-color: var(--background) /* 控えめな背景色 */
-      color: rgba(255, 255, 255, 0.7); /* 控えめなテキスト色 */
-      box-shadow: none; /* シャドウを削除 */
+    /* Toggle Switch Styles */
+    .settings {
+      display: flex;
+      align-items: center;
+      margin: 16px 0 0 0;
     }
 
-    #prefs:hover {
-      background-color: var(--background); /* ホバー時の背景色を変更しない */
-      box-shadow: none; /* ホバー時のシャドウを削除 */
-      transform: none; /* ホバー時の変形を削除 */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
     }
 
-    #prefs:active {
-      background-color: var(--background) /* アクティブ時の背景色を変更しない */
-      box-shadow: none; /* アクティブ時のシャドウを削除 */
-      transform: none; /* アクティブ時の変形を削除 */
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
-    #html:hover {
-      background-color: rgba(67, 56, 202, 0.9);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--disabled-color);
+      transition: var(--transition);
+      border-radius: 24px;
     }
 
-    #md:hover {
-      background-color: rgba(14, 116, 144, 0.9);
-      box-shadow: 0 4px 12px rgba(8, 145, 178, 0.15);
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: var(--transition);
+      border-radius: 50%;
     }
 
-    #json:hover {
-      background-color: rgba(15, 118, 110, 0.9);
-      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+    input:checked + .toggle-slider {
+      background-color: var(--primary-color);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+
+
+    /* Shortcut Input Styles */
+
+    .shortcut-input {
+      padding: 4px 4px;
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-family: inherit;
+      font-size: 12px;
+      transition: var(--transition);
+      width: 70px;
+      margin: 0 10px;
+    }
+
+    .shortcut-input::placeholder {
+      color: var(--disabled-color);
+    }
+
+    .shortcut-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+ 
+    }
+
+    .shortcut-input:disabled {
+      background-color: rgba(229, 231, 235, 0.5);
+      color: var(--disabled-color);
+      cursor: not-allowed;
+    }
+
+    .shortcut-label {
+      margin-right: 10px;
+      font-weight: 500;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <h1>Copy Link As</h1>
   <ul>
-    <li><button id="html" title="Copy link as HTML a element">&lt;a /&gt;</button></li>
-    <li><button id="md" title="Copy link as markdown">[..](..)</button></li>
-    <li><button id="json" title="Copy link as JSON">{"..":".."}</button></li>
-    <li><button id="prefs" title="Configuration">⚙️</button></li> 
+    <li>
+      <button id="html" title="Copy link as HTML a element">&lt;a /&gt;</button>
+      <input type="text" id="shortcut_input_html" class="shortcut-input" placeholder="Ctrl+Shift+C" disabled>
+      <label class="toggle-switch">
+        <input type="checkbox" id="shortcut-toggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </li>
+    <li>
+      <button id="md" title="Copy link as markdown">[..](..)</button>
+      <input type="text" id="shortcut_input_md" class="shortcut-input" placeholder="" disabled>
+      <label class="toggle-switch">
+        <input type="checkbox" id="shortcut-toggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </li>
+    <li>
+      <button id="json" title="Copy link as JSON">{"..":".."}</button>
+      <input type="text" id="shortcut_input_json" class="shortcut-input" placeholder="" disabled>
+      <label class="toggle-switch">
+        <input type="checkbox" id="shortcut-toggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </li>
+    <!-- <li><button id="prefs" title="Configuration">⚙️</button></li>  -->
   </ul>
+
+
 </body>
 </html>
+
+
+
+
+
+
+
+  </style>
