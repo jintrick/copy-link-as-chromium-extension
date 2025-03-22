@@ -1,108 +1,66 @@
 import { crm } from "./chrome.js";
 
-const FEEDBACK_STATUS = {
-    FAILED: 0,
-    SUCCESS: 1
-}
-
-const EVENT_HANDLERS = {
-    "html": makeLink_html,
-    "md": makeLink_md,
-    "json": makeLink_json,
-};
-
 var title;
 var url;
 
+const FEEDBACK_DURATION = 1500;
+const FEEDBACK_FAILED = 0;
+const FEEDBACK_SUCCESS = 1;
+
+const MakeLinkAs = {
+    "html": () => `<a href="${url.serializeAsHTML()}">${title}</a>`,
+    "md": () => `[${title}](${url.serializeAsHTML()})`,
+    "json": () => JSON.stringify({ title, url: url.href }),
+};
+
 URL.prototype.serializeAsHTML = function(){
-  const ser = new XMLSerializer();
-  const txt = document.createTextNode(this.href);
-  return ser.serializeToString(txt);
+  return new XMLSerializer()
+    .serializeToString(
+        document.createTextNode(this.href)
+    );
 };
 
 HTMLButtonElement.prototype.feedback = function(status) {
-    const isSuccess = status === FEEDBACK_STATUS.SUCCESS;
-    const originalText = this.innerText;
-    const message = isSuccess? "Copied!" : "Failed!";
+    const isSuccess = status === FEEDBACK_SUCCESS;
     const statusName = isSuccess? "button-success" : "button-error";
-    this.innerHTML = message;
+
+    button.title = this.innerText;
+    this.innerHTML = isSuccess? "Copied!" : "Failed!";
     this.classList.add(statusName);
     setTimeout(() => {
-        this.innerText = originalText;
+        this.innerText = this.title;
         this.classList.remove(statusName);
-    }, 2000);
+    }, FEEDBACK_DURATION);
 };
 
 document.addEventListener('DOMContentLoaded', async function() {
     try {
-        // Toggle Event
-        document.querySelectorAll(".shortcut-toggle").forEach((element) => {
-            element.addEventListener('change', function() {
-                const shortcutInput = this.closest('li').querySelector('.shortcut-input');
-                shortcutInput.disabled = !this.checked;
-            });
-        });
-
-        const toggleSwitch = document.getElementById('shortcut-toggle');
-        const shortcutInput = document.getElementById('shortcut-input');
-        
-        // Toggle shortcut input state based on checkbox
-        toggleSwitch.addEventListener('change', function() {
-          shortcutInput.disabled = !this.checked;
-        });
-        
-        // Initialize with default value
-        shortcutInput.disabled = !toggleSwitch.checked;
-
-
-        //Tabの取得
+  
+        //set title and url
         const tab = await crm.getActiveTab();
         title = tab.title;
         url = new URL(tab.url);
         
         // event listener for each button
-        for (const [format, listener] of Object.entries(EVENT_HANDLERS)) {
-            const element = document.getElementById(format);
-            element.addEventListener('click', function() { 
-                listener(title, url, this);
+        document.querySelectorAll('button[data-format]').forEach(button => {
+            button.addEventListener('click', e => {
+                const text = MakeLinkAs[button.dataset.format]();
+                navigator.clipboard.writeText(text).then(() => {
+                    button.feedback(FEEDBACK_SUCCESS);
+                }).catch(err => {
+                    button.feedback(FEEDBACK_FAILED);
+                    throw new Error('クリップボードへのコピーが失敗しました：', err)
+                });
             });
-        }
+        });
+
     } catch (error) {
         console.error("Error initializing popup:", error);
     }
 
     // move focus to the first button
     document.querySelector("button").focus();
-
 });
 
-function makeLink_html(title, url, buttonElement) {
-    url = url.serializeAsHTML();
-    const expression = `<a href="${url}">${title}</a>`;
-    copyToClipboard(expression, buttonElement);
-}
 
-function makeLink_md(title, url, buttonElement) {
-    url = url.serializeAsHTML();
-    const expression = `[${title}](${url})`;
-    copyToClipboard(expression, buttonElement);
-}
-
-function makeLink_json(title, url, buttonElement) {
-    url = url.href
-    const expression = JSON.stringify({ title, url });
-    copyToClipboard(expression, buttonElement);
-}
-
-function copyToClipboard(text, buttonElement) {
-    try {
-        navigator.clipboard.writeText(text).then(() => {
-            buttonElement.feedback(SUCCESS);
-        }).catch(err => {
-            buttonElement.feedback(FAILED);
-        });
-    } catch (err) {
-        buttonElement.feedback(FAILED);
-    }
-}
 

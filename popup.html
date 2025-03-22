@@ -107,15 +107,15 @@
 
 
     /* ボタンごとの個別スタイル */
-    #html {
+    button[data-format="html"] {
       background-color: rgba(0, 115, 255, 0.856);
     }
 
-    #md {
+    button[data-format="md"] {
       background-color: rgba(8, 145, 178, 0.85);
     }
 
-    #json {
+    button[data-format="json"] {
       background-color: rgba(13, 148, 136, 0.85);
     }
  
@@ -213,28 +213,16 @@
   <h1>Copy Link As</h1>
   <ul>
     <li>
-      <button id="html" title="Copy link as HTML a element">&lt;a /&gt;</button>
+      <button data-format="html" title="Copy link as HTML a element">&lt;a /&gt;</button>
       <input type="text" id="shortcut_input_html" class="shortcut-input" placeholder="Ctrl+Shift+C" disabled>
-      <label class="toggle-switch">
-        <input type="checkbox" id="shortcut-toggle">
-        <span class="toggle-slider"></span>
-      </label>
     </li>
     <li>
-      <button id="md" title="Copy link as markdown">[..](..)</button>
+      <button data-format="md" title="Copy link as markdown">[..](..)</button>
       <input type="text" id="shortcut_input_md" class="shortcut-input" placeholder="" disabled>
-      <label class="toggle-switch">
-        <input type="checkbox" id="shortcut-toggle">
-        <span class="toggle-slider"></span>
-      </label>
     </li>
     <li>
-      <button id="json" title="Copy link as JSON">{"..":".."}</button>
+      <button data-format="json" title="Copy link as JSON">{"..":".."}</button>
       <input type="text" id="shortcut_input_json" class="shortcut-input" placeholder="" disabled>
-      <label class="toggle-switch">
-        <input type="checkbox" id="shortcut-toggle">
-        <span class="toggle-slider"></span>
-      </label>
     </li>
     <!-- <li><button id="prefs" title="Configuration">⚙️</button></li>  -->
   </ul>
