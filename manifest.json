@@ -1,21 +1,15 @@
 {
     "manifest_version": 3,
-    "name": "Copy Link As",
-    "description": "Copy the current page's URL in various formats",
+    "name": "CopyLinkAs",
+    "description": "Experience extremely simple URL copying in various formats.",
+    "homepage_url": "https://github.com/jintrick/copy-link-as-chromium-extension",
     "version": "1.2.0",
-    "options_ui": {
-      "page": "./options.html",
-      "open_in_tab": true
-    },
     "action": {
       "default_popup": "./popup.html"
     },
-
     "permissions": [
       "storage",
       "clipboardWrite",
-      "activeTab",
-      "scripting",
-      "commands"
+      "activeTab"
     ]
   }

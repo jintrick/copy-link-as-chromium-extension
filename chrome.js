@@ -1,20 +1,26 @@
-// chrome.js
+
+
+export class Tab{
+    constructor(tab_){
+        this._tab = tab_
+        this._url = null;
+        this.title = tab_.title
+    }
+    get url() {
+        return this._url || (this._url = new URL(this._tab.url));
+    }
+}
+
 class Crm {
-  constructor() {
-    this._activeTab = null;
-  }
+    constructor() {
+    }
 
-  async getActiveTab() {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
-    this._activeTab = tab;
-    return this._activeTab;
-  }
+    async getActiveTab() {
+        let queryOptions = { active: true, currentWindow: true };
+        let [tab_] = await chrome.tabs.query(queryOptions);
+        return new Tab(tab_);
+    }
 
-  // 必要に応じて同期的なゲッターを追加
-  get activeTab() {
-    return this._activeTab;
-  }
 }
 
 const crm = new Crm();
